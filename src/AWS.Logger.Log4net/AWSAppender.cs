@@ -45,6 +45,16 @@ namespace AWS.Logger.Log4net
         }
 
         /// <summary>
+        /// Specifies the days to retain log groups which are created by this logger, if the one specified by <see cref="LogGroup"/> doesn't already exist
+        /// and <see cref="DisableLogGroupCreation"/> is not <c>true</c>. Requires logs:PutRetentionPolicy permission to apply the retention policy to
+        /// newly created log groups. The default value of <c>null</c> will not apply a retention policy to new log groups.
+        /// <para>
+        /// Note that log groups which already exist will not have this retention policy applied for startup performance reasons.
+        /// </para>
+        /// </summary>
+        public int? NewLogGroupRetentionInDays { get; set; } = null;
+
+        /// <summary>
         /// Gets and sets the Profile property. The profile is used to look up AWS credentials in the profile store.
         /// <para>
         /// For understanding how credentials are determine view the top level documentation for AWSLoggerConfig class.

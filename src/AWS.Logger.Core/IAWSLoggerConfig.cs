@@ -22,6 +22,16 @@ namespace AWS.Logger
         /// When creation of log groups is disabled, logs:DescribeLogGroups permission is NOT required.
         /// </summary>
         bool DisableLogGroupCreation { get; set; }
+        
+        /// <summary>
+        /// Specifies the days to retain log groups which are created by this logger, if the one specified by <see cref="LogGroup"/> doesn't already exist
+        /// and <see cref="DisableLogGroupCreation"/> is not <c>true</c>. Requires logs:PutRetentionPolicy permission to apply the retention policy to
+        /// newly created log groups.
+        /// <para>
+        /// Note that log groups which already exist will not have this retention policy applied for startup performance reasons.
+        /// </para>
+        /// </summary>
+        int? NewLogGroupRetentionInDays { get; set; }
 
         /// <summary>
         /// Gets the Profile property. The profile is used to look up AWS credentials in the profile store.
