@@ -50,11 +50,14 @@ namespace NLog.AWS.Logger
         }
         
         /// <summary>
-        /// Specifies the days to retain log groups which are created by this logger, if the one specified by <see cref="LogGroup"/> doesn't already exist
+        /// Specifies the days to retain events in log groups which are created by this logger, if the one specified by <see cref="LogGroup"/> doesn't already exist
         /// and <see cref="DisableLogGroupCreation"/> is not <c>true</c>. Requires logs:PutRetentionPolicy permission to apply the retention policy to
         /// newly created log groups. The default value of <c>null</c> will not apply a retention policy to new log groups.
         /// <para>
         /// Note that log groups which already exist will not have this retention policy applied for startup performance reasons.
+        /// </para>
+        /// <para>
+        /// Possible values are: <c>1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 2192, 2557, 2922, 3288, and 3653</c> days.
         /// </para>
         /// </summary>
         public int? NewLogGroupRetentionInDays { get; set; } = null;
