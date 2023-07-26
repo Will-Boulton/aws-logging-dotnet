@@ -46,6 +46,9 @@ namespace AWS.Logger
         /// Possible values are: <c>1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 2192, 2557, 2922, 3288, and 3653</c> days.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// Note that invalid retention policy values will result in the policy not being applied, however this error is non-fatal and the application and will continue without the policy.
+        /// </remarks>
         public int? NewLogGroupRetentionInDays { get; set; } = null;
 
         /// <summary>
