@@ -474,7 +474,7 @@ namespace AWS.Logger.Core
                     {
                         LogLibraryServiceError(new System.Net.WebException($"Create LogGroup {_config.LogGroup} returned status: {createGroupResponse.HttpStatusCode}"), serviceURL);
                     }
-                    else if (_config.NewLogGroupRetentionInDays.HasValue)
+                    else if (_config.NewLogGroupRetentionInDays.HasValue && _config.NewLogGroupRetentionInDays.Value > 0)
                     {
                         // If CreateLogGroup returns a success status code then this process is responsible for applying the retention policy.
                         // This prevents a case of multiple instances each trying to set the retention policy. 
