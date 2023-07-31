@@ -107,11 +107,39 @@ namespace AWS.Logger.Core
 
             ((AmazonCloudWatchLogsClient)this._client).BeforeRequestEvent += ServiceClientBeforeRequestEvent;
             ((AmazonCloudWatchLogsClient)this._client).ExceptionEvent += ServiceClienExceptionEvent;
-
+            AssertValidConfiguration();
             StartMonitor();
             RegisterShutdownHook();
         }
 
+        /// <summary>
+        ///     Validate that the configuration provided to the logger should prevent startup with a fatal error
+        /// </summary>
+        private void AssertValidConfiguration()
+        {
+            AssertValidRetentionPolicyIfSpecified();
+        }
+
+        /// <summary>
+        ///     Check if the config specifies a retention policy, and validate that the value is correct 
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">When a value of the retention period is specified which is not correct</exception>
+        /// <returns>Whether a valid retention policy was specified</returns>
+        private void AssertValidRetentionPolicyIfSpecified()
+        {
+            if (!(_config.NewLogGroupRetentionInDays is int logGroupRetentionInDays)) return;
+            
+            switch (logGroupRetentionInDays)
+            {
+                case 1: case 3: case 5: case 7: case 14: case 30: case 60: case 90: case 120: case 150: case 180: case 365:
+                case 400: case 545: case 731: case 1827: case 2192: case 2557: case 2922: case 3288: case 3653:
+                    return;
+            }
+            var error = new System.InvalidOperationException($@"Invalid value '{logGroupRetentionInDays}' provided for {nameof(IAWSLoggerConfig.NewLogGroupRetentionInDays)} in configuration. 
+Acceptable values are 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 2192, 2557, 2922, 3288, 3653 days, or null.");
+            LogLibraryServiceError(error);
+            throw error;
+        }
 
 #if CORECLR
         private void RegisterShutdownHook()
@@ -346,7 +374,11 @@ namespace AWS.Logger.Core
                         return;
                     }
                 }
-                catch (Exception ex)
+                catch (System.InvalidOperationException)
+                {
+                    throw;
+                }
+                catch (Exception ex) 
                 {
                     // We don't want to kill the main monitor loop. We will simply log the error, then continue.
                     // If it is an OperationCancelledException, die
@@ -474,11 +506,11 @@ namespace AWS.Logger.Core
                     {
                         LogLibraryServiceError(new System.Net.WebException($"Create LogGroup {_config.LogGroup} returned status: {createGroupResponse.HttpStatusCode}"), serviceURL);
                     }
-                    else if (_config.NewLogGroupRetentionInDays.HasValue && _config.NewLogGroupRetentionInDays.Value > 0)
+                    else if (_config.NewLogGroupRetentionInDays is int retentionInDays)
                     {
                         // If CreateLogGroup returns a success status code then this process is responsible for applying the retention policy.
                         // This prevents a case of multiple instances each trying to set the retention policy. 
-                        PutRetentionPolicy(_config.NewLogGroupRetentionInDays.Value,_config.LogGroup, serviceURL, token);
+                        PutRetentionPolicy(retentionInDays,_config.LogGroup, serviceURL, token);
                     }
                 }
             }
