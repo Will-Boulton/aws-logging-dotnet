@@ -61,7 +61,8 @@ are only applied to _new_ Log Groups created directly by these libraries. By def
 
 
 Note that any value of NewLogGroupRetentionInDays which is not one of the below is a configuration error which will result
-in a non-fatal error applying the policy. The application and logging will continue however no retention policy will be applied.
+in a fatal error at startup of the application. This ensures that any Log Groups _successfully_ created while a value for NewLogGroupRetentionInDays is specified will
+have a retention policy applied as well.
  
 ```csharp
 null, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 2192, 2557, 2922, 3288, 3653
