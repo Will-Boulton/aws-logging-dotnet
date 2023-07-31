@@ -374,10 +374,6 @@ Acceptable values are 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 
                         return;
                     }
                 }
-                catch (System.InvalidOperationException)
-                {
-                    throw;
-                }
                 catch (Exception ex) 
                 {
                     // We don't want to kill the main monitor loop. We will simply log the error, then continue.
