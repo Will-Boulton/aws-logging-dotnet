@@ -56,7 +56,7 @@ namespace AWS.Logger.Log4net
         /// </para>
         /// </summary>
         /// <remarks>
-        /// Note that invalid retention policy values will result in the policy not being applied, however this error is non-fatal and the application and will continue without the policy.
+        /// Note that invalid retention policy values will result in a fatal error at startup to ensure no log groups are created without an expected retention policy
         /// </remarks>
         public int? NewLogGroupRetentionInDays { get; set; } = null;
 
